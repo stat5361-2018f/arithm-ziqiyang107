@@ -1,5 +1,5 @@
 Hello Ziqi
 This is the master version of try.txt?
-This is test for conflict on master branch
+This is test for conflict on “new_try” branch
 
 
