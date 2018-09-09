@@ -1,3 +1,4 @@
 Hello Ziqi
 This is the master version of try.txt?
-This is modified on new_try
+This is test for conflict on new_try branch
+
