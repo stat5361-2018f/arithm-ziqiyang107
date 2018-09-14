@@ -1,16 +1,16 @@
 ---
 title: "Statistical Computing Homework 2, Chapter 1"
-output: 
-  html_document:
-    toc: true
-    theme: united
-    number_sections: true
-    fig_width: 9 
-    fig_height: 6 
-author:
-  Ziqi Yang
+author: "Ziqi Yang"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-
+output:
+  html_document:
+    fig_height: 6
+    fig_width: 9
+    number_sections: yes
+    theme: united
+    toc: yes
+  pdf_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
