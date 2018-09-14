@@ -1,0 +1,110 @@
+---
+title: "Statistical Computing Homework 2, Chapter 1"
+output: 
+  html_document:
+    toc: true
+    theme: united
+    number_sections: true
+    fig_width: 9 
+    fig_height: 6 
+author:
+  Ziqi Yang
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exercise 2: Monte Carlo methods
+
+## R Code
+```{r cars}
+N <- c(100 ,1000, 10000);  Ts <- c(0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72)
+experiment <- array( 0, dim = c(length(N), length(Ts), 100) )
+
+for (expe in 1:100) {
+  for (t in 1:length(Ts)) {
+    for (n in 1:length(N)) {
+      temp <- rnorm(N[n], mean = 0, sd = 1)
+      experiment[n ,t , expe] <- sum( ifelse( temp <= Ts[t], 1, 0 ) ) / N[n]
+    }
+  }
+}
+
+
+```
+
+
+
+## Table for the result:
+```{r}
+library(knitr)
+knitr::kable(data.frame(rbind(experiment[,,1], pnorm(Ts))), format = "markdown", 
+             row.names = T, col.names = Ts)
+```
+
+Row 1 is for **$n = 10^2$**, row 2 is for **$n = 10^3$**, row 3 is for **$n = 10^4$**, row 4 is for actual probability. We can see that when n becomes greater and greater, the simulated probability is approximately the actual probability. 
+
+## Boxplots:  
+  
+```{r, echo = F}
+par(mfrow=c(3,3))
+boxplot(t(experiment[,1,])-pnorm(Ts[1]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 0.0")
+boxplot(t(experiment[,2,])-pnorm(Ts[2]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 0.67")
+boxplot(t(experiment[,3,])-pnorm(Ts[3]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 0.84")
+boxplot(t(experiment[,4,])-pnorm(Ts[4]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 1.28")
+boxplot(t(experiment[,5,])-pnorm(Ts[5]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 1.65")
+boxplot(t(experiment[,6,])-pnorm(Ts[6]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 2.32")
+boxplot(t(experiment[,7,])-pnorm(Ts[7]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 2.58")
+boxplot(t(experiment[,8,])-pnorm(Ts[8]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 3.09")
+boxplot(t(experiment[,9,])-pnorm(Ts[9]), names=c("n=10^2","n=10^3","n=10^4"))
+title("t = 3.72")
+par(mfrow=c(1,1))
+#title(main = "My Title", line = -0.5, outer=TRUE)
+mtext("Experiments with 100 times", side=3, line=-1, outer=TRUE, cex=1, font=2)
+```
+
+# Exercise 3
+## .Machine$double.xmax: 1.797693e+308
+
+* Since we are using the 64-bit double precision floating point arithmetic, so we have 1 bit of sign, 11 bits of exponent, 52 bits of significand  
+* First, for sign bit, this bit should take value 0, so $(-1)^0 = 1$, since we want to get the largest number  
+* Second, for exponent bits, if we fill all 11 bits with 1, then we have $2^0+2^1+2^2+...+2^10=2^11-1=2047$, but $2047$ is reserved for infinity, and also it's normalized by subtracing $1023$, so we have $2046-1023=1023$  
+* We fill the significand with all 1, then we $2^{-1}+2^{-2}+...+2^{-52}=1-2^{-52}$, but remember to add 1 before the radix point, we have $1+1-2^{-52}=2-2^{-52}$  
+* So if we compute $(2-2^{-52}) \times 2^{1023}$, then we should have $1.797693e+308$, which is .Machine$double.max  
+
+## .Machine$double.xmin: 2.225074e-308
+* First, for sign bit, this bit should take value 0, so $(-1)^0 = 1$, since we want to get a positive number  
+* Second, for exponent bits, if we fill all 11 bits with 0, then we have $0$, but $0$ is reserved, and also it's normalized by subtracing $1023$, so we have $1-1023=-1022$  
+* We fill the significand with all 0, then we have $0$, but remember to add 1 before the radix point, we have $1+0=1$  
+* So if we compute $(1) \times 2^{-1022}$, then we should have $2.225074e-308$, which is .Machine$double.max  
+
+
+
+## .Machine$double.eps: 2.220446e-16
+* This is machine $\epsilon$  
+* so if we set the last digit in significand to be 1, and remain 0, then we have $1+2^{-52} \neq 1$, so $2^{-52}$ is machine $\epsilon$ , it's equal to $2.220446e-16$  
+
+## .Machine$double.neg.eps: 1.110223e-16
+* Since $1 - \epsilon = 1.1111...1110 \times 2^{-1}$, so there is one number between this and $1$, which is $1.1111...1111 \times 2^{-1} = 1 - \epsilon/2 \neq 1$, so .Machine$double.neg.eps is $\epsilon/2=2^{-53}=1.110223e-16$
+
+
+
+
+
+
+
+
+
+
+
