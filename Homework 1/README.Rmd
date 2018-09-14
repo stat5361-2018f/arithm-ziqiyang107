@@ -1,1 +1,4 @@
-
+The problems I encountered:  
+1. Make sure you have the most updated version of R, Pandoc
+2. When you compile the book, there are errors, then install the missing packages according to error message  
+3. If you have missing font, make sure download the missing font into your own laptop
